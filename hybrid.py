@@ -13,50 +13,49 @@ def f2Prime(x):
 
 
 #initial values
-tolerance = 1e-8
+tolerance = 10e-8
 Error = tolerance+1 #to start while
-print("Choose a function:")
+countNR, countBS = 0, 0
+
+
+print("Choose a function: (default option is 2)")
 print("(1) Polynomial; (2) x^2 - 2x - 2")
 choice = int(input("Enter your choice: "))
-match choice:
-    case 1:
-        f = f1
-        fPrime = f1Prime
-        xLeft = 0.4
-        xRight = 0.7
-    case 2:
-        f = f2
-        fPrime = f2Prime
-        xLeft = 0
-        xRight = 3
-    case _:
-        print("Invalid choice, function 1 is taken as default")
-        f = f1
-        fPrime = f1Prime
-        xLeft = 0.4
-        xRight = 0.7
+if choice == 1:
+    f = f1
+    fPrime = f1Prime
+    xLeft = 0.4
+    xRight = 0.7
+else:
+    f = f2
+    fPrime = f2Prime
+    xLeft = 0
+    xRight = 3
 
-
+xCurrent = xLeft
+xNew = xLeft
 while Error>tolerance:
+    LT = (xNew - xLeft) * fPrime(xNew) - f(xNew)
+    RT = (xNew - xRight) * fPrime(xNew) - f(xNew)
+
     # check if to use N-R or Bisection
-    if (fPrime(xLeft))>0:
-        if (xLeft-xRight)*fPrime(xLeft) - f(xLeft) <= 0:    #N-R method
-            xNew = xLeft - f(xLeft)/fPrime(xLeft)
-        else:                                               # bisection
-            xNew = (xLeft+xRight)/2
-        # new interval
-        if xNew > xLeft:
-            xRight = xNew
-        else:
-            xLeft = xNew
+    if LT*RT <= 0:                                      #N-R method
+        xNew = xCurrent - f(xCurrent)/fPrime(xCurrent)
+        countNR += 1
+    else:                                               # bisection
+        xNew = (xLeft+xRight)/2
+        countBS += 1
+
+    # new interval
+    if f(xNew)*f(xLeft)<0:
+        Error = abs((xNew - xRight) / xNew)
+        xRight = xNew
     else:
-        if (xLeft-xRight)*fPrime(xLeft) - f(xLeft) >= 0:    # N-R
-            xNew = xLeft - f(xLeft)/fPrime(xLeft)
-        else:
-            xNew = (xLeft+xRight)/2                         # bisection
-        # new interval
-        if xNew > xLeft:
-            xRight = xNew
-        else:
-            xLeft = xNew
-    Error = abs((xNew-xLeft)/xNew)   
+        Error = abs((xNew - xLeft) / xNew)
+        xLeft = xNew
+    xCurrent = xNew
+
+
+print("Root found at: ", round(xLeft, 8))
+print("Iterations for N-R: ", countNR)
+print("Iterations for bisection: ", countBS)
