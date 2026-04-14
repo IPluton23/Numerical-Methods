@@ -24,5 +24,6 @@ diagonal_a = [-1] * 4
 r = [0, 1, 2, 3, 4]
 
 gauss = gauss_elimination(diagonal_a, diagonal_b, diagonal_c, r)
-for i in gauss:
-    print(round(i, 5))
+if __name__ == '__main__':
+    for i in gauss:
+        print(round(i, 5))
