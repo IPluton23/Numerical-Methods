@@ -1,7 +1,7 @@
 def gauss_elimination(a, b, c, r):
-    x = [0] * 5 # just to iterate it
-    beta = [0] * 5
-    rho = [0] * 5
+    x = [0] * len(r) # just to iterate it
+    beta = [0] * len(r)
+    rho = [0] * len(r)
     beta[0] = b[0]
     rho[0] = r[0]
 
